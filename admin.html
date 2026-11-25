@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin · MY PLUG 021</title><meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head><body>
+<div class="login" id="login"><div class="panel">
+  <h2>Admin login</h2><label for="em">Email</label><input id="em" type="email" autocomplete="username"><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password">
+  <p style="margin:14px 0"><button class="btn blue" id="go">Log in</button></p><p id="err" style="color:#c00"></p>
+</div></div>
+
+<div id="app" hidden>
+<header><div class="wrap"><span class="logo">MY PLUG<b>021</b> admin</span><nav><a href="index.html" target="_blank">View site</a><button class="btn sm ghost" id="out">Log out</button></nav></div></header>
+<div class="wrap" style="padding:28px 0 60px">
+  <div class="stats">
+    <div class="stat"><b id="sAll">0</b>Products</div><div class="stat"><b id="sIn">0</b>In stock</div>
+    <div class="stat"><b id="sOut">0</b>Sold out</div><div class="stat"><b id="sCat">0</b>Categories</div>
+  </div>
+
+  <div class="panel">
+    <h2 id="formTitle">Add a product</h2>
+    <input type="hidden" id="pid">
+    <div class="row"><div><label for="pn">Name</label><input id="pn"></div><div><label for="pp">Price</label><input id="pp" type="number" min="0"></div></div>
+    <div class="row"><div><label for="pc">Category</label><input id="pc" list="cl" placeholder="Shoes, Phones, Clothes..."><datalist id="cl"></datalist></div>
+    <div><label for="pt">Label (optional)</label><input id="pt" placeholder="New, Hot, Sale"></div></div>
+    <label for="pd">Description</label><textarea id="pd" rows="3"></textarea>
+    <div class="row"><div><label for="pf">Photo (upload)</label><input id="pf" type="file" accept="image/*"></div>
+    <div><label for="pi">…or photo link</label><input id="pi" placeholder="https://..."></div></div>
+    <label><input id="ps" type="checkbox" checked style="width:auto"> In stock</label>
+    <p style="margin-top:16px" class="acts"><button class="btn blue" id="save">Save product</button><button class="btn ghost" id="clear">Clear form</button></p>
+  </div>
+
+  <div class="panel"><h2>Products</h2><div style="overflow-x:auto"><table><thead><tr><th></th><th>Name</th><th>Price</th><th>Stock</th><th></th></tr></thead><tbody id="rows"></tbody></table></div></div>
+
+  <div class="panel"><h2>Site settings</h2>
+    <label for="st">Tagline</label><input id="st">
+    <label for="sm">Scrolling banner (one message per line)</label><textarea id="sm" rows="4"></textarea>
+    <div class="row"><div><label for="sw">WhatsApp number (international, no +)</label><input id="sw"></div><div><label for="sc">Currency</label><input id="sc"></div></div>
+    <label for="sf">Facebook link</label><input id="sf">
+    <p style="margin-top:16px"><button class="btn blue" id="saveS">Save settings</button></p>
+  </div>
+
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let data={settings:{},products:[]};
+const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)};
+const fail=e=>{console.error(e);toast(e.message||"Something went wrong")};
+async function load(){data=await fetchPublished();render();fillSettings();if(data.error)toast("Could not load data. Check app.js keys and setup.sql.")}
+function render(){
+  const P=data.products,s=data.settings;
+  $("sAll").textContent=P.length;$("sIn").textContent=P.filter(p=>p.stock).length;$("sOut").textContent=P.filter(p=>!p.stock).length;
+  const cats=[...new Set(P.map(p=>p.category).filter(Boolean))];$("sCat").textContent=cats.length;
+  $("cl").innerHTML=cats.map(c=>`<option value="${esc(c)}">`).join("");
+  $("rows").innerHTML=P.length?P.map(p=>`<tr><td>${p.image?`<img src="${esc(p.image)}" alt="">`:"🛍️"}</td><td>${esc(p.name)}<br><small>${esc(p.category)}</small></td><td>${money(p.price,s)}</td>
+  <td><button class="btn sm ${p.stock?"":"pink"}" data-t="${p.id}">${p.stock?"In stock":"Sold out"}</button></td>
+  <td class="acts"><button class="btn sm ghost" data-e="${p.id}">Edit</button><button class="btn sm pink" data-d="${p.id}">Delete</button></td></tr>`).join(""):`<tr><td colspan="5">No products yet. Add your first one above.</td></tr>`;
+}
+function fillSettings(){const s=data.settings;$("st").value=s.tagline||"";$("sm").value=(s.marquee||[]).join("\n");$("sw").value=s.whatsapp||"";$("sc").value=s.currency||"MK";$("sf").value=s.facebook||""}
+function clearForm(){["pid","pn","pp","pc","pt","pd","pi","pf"].forEach(i=>$(i).value="");$("ps").checked=true;$("formTitle").textContent="Add a product"}
+function resizeBlob(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);c.toBlob(res,"image/jpeg",.8)};im.src=r.result};r.readAsDataURL(file)})}
+async function uploadImage(file){
+  const path=Date.now()+".jpg",{error}=await sb.storage.from("product-images").upload(path,await resizeBlob(file),{contentType:"image/jpeg"});
+  if(error)throw error;return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+}
+$("save").onclick=async()=>{
+  const name=$("pn").value.trim(); if(!name||$("pp").value==="")return toast("Name and price are required");
+  $("save").disabled=true;
+  try{
+    let image=$("pi").value.trim(); if($("pf").files[0]) image=await uploadImage($("pf").files[0]);
+    const id=$("pid").value, old=data.products.find(p=>p.id==id);
+    const item={name,price:Number($("pp").value),category:$("pc").value.trim(),tag:$("pt").value.trim(),description:$("pd").value.trim(),image:image,stock:$("ps").checked};
+    const {error}=id?await sb.from("products").update(item).eq("id",id):await sb.from("products").insert(item);
+    if(error)throw error;
+    clearForm();await load();toast("Product saved");
+  }catch(e){fail(e)}finally{$("save").disabled=false}
+};
+$("clear").onclick=clearForm;
+$("rows").onclick=async e=>{const b=e.target.closest("button");if(!b)return;
+  try{
+    if(b.dataset.t){const p=data.products.find(x=>x.id==b.dataset.t);const {error}=await sb.from("products").update({stock:!p.stock}).eq("id",p.id);if(error)throw error;await load()}
+    if(b.dataset.d&&confirm("Delete this product?")){const {error}=await sb.from("products").delete().eq("id",b.dataset.d);if(error)throw error;await load();toast("Deleted")}
+    if(b.dataset.e){const p=data.products.find(x=>x.id==b.dataset.e);$("pid").value=p.id;$("pn").value=p.name;$("pp").value=p.price;$("pc").value=p.category||"";$("pt").value=p.tag||"";$("pd").value=p.description||"";$("pi").value=p.image||"";$("ps").checked=p.stock;$("formTitle").textContent="Edit product";scrollTo({top:0,behavior:"smooth"})}
+  }catch(err){fail(err)}
+};
+$("saveS").onclick=async()=>{
+  const s={tagline:$("st").value.trim(),marquee:$("sm").value.split("\n").map(x=>x.trim()).filter(Boolean),whatsapp:$("sw").value.replace(/\D/g,""),currency:$("sc").value.trim()||"MK",facebook:$("sf").value.trim()};
+  const {error}=await sb.from("settings").upsert({id:1,data:s});
+  if(error)return fail(error);await load();toast("Settings saved");
+};
+function show(on){if(on&&!$("app").hidden)return;$("login").hidden=on;$("app").hidden=!on;if(on)load()}
+$("go").onclick=async()=>{
+  if(!sb){$("err").textContent="Supabase is not set up yet. Fill in app.js.";return}
+  const {error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+  if(error)$("err").textContent=error.message;
+};
+$("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
+$("out").onclick=()=>sb.auth.signOut();
+if(sb){sb.auth.onAuthStateChange((_e,session)=>show(!!session));sb.auth.getSession().then(({data})=>show(!!data.session))}
+</script></body></html>
