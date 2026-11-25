@@ -1,3 +1,4 @@
+[hidden]{display:none!important}
 :root{--ink:#14121f;--paper:#f7f4ec;--blue:#2a3cff;--sun:#ffd23f;--pink:#ff5d8f;--mute:#6b687a;--r:18px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -13,7 +14,7 @@ header .wrap{display:flex;align-items:center;justify-content:space-between;paddi
 nav{display:flex;gap:10px;align-items:center}
 nav a{padding:8px 14px;border-radius:99px;font-weight:600;transition:background .2s,transform .2s}
 nav a:hover{background:var(--sun);transform:translateY(-2px)}
-.btn{display:inline-block;border:2px solid var(--ink);background:var(--sun);padding:12px 22px;border-radius:99px;font-weight:700;font-family:inherit;font-size:1rem;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.btn{display:inline-block;border:2px solid var(--ink);background:var(--sun);padding:12px 22px;border-radius:99px;font-weight:700;font-family:inherit;font-size:1rem;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .2s,box-shadow .2s}
 .btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
 .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
 .btn.blue{background:var(--blue);color:#fff}.btn.pink{background:var(--pink)}.btn.ghost{background:#fff}.btn.sm{padding:8px 14px;font-size:.9rem;box-shadow:3px 3px 0 var(--ink)}
@@ -25,7 +26,7 @@ nav a:hover{background:var(--sun);transform:translateY(-2px)}
 @keyframes rise{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
 .hero p{max-width:46ch;margin:24px 0;font-size:1.15rem;color:var(--mute);animation:rise .9s .4s both}
 .hero .btns{display:flex;gap:14px;flex-wrap:wrap;animation:rise .9s .5s both}
-.badge{position:absolute;right:2%;top:40px;width:150px;height:150px;border-radius:50%;background:var(--pink);border:2px solid var(--ink);display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.1;animation:spin 14s linear infinite}
+.badge{position:absolute;right:2%;top:40px;width:150px;height:150px;border-radius:50%;background:var(--pink);border:2px solid var(--ink);display:grid;place-items:center;text-align:center;font-weight:800;transform:rotate(8deg);animation:spin 18s linear infinite}
 .badge small{display:block;font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
 .blob{position:absolute;right:8%;bottom:10px;width:220px;height:220px;background:var(--sun);border:2px solid var(--ink);border-radius:58% 42% 61% 39%/45% 55% 45% 55%;z-index:-1;animation:morph 8s ease-in-out infinite alternate}
@@ -60,7 +61,7 @@ h2{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.04em;margin-bottom:20px}
 footer{background:var(--ink);color:var(--paper);padding:48px 0 90px}
 footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
 footer .big{font-size:2rem;font-weight:800;letter-spacing:-.04em}
-.fab{position:fixed;right:18px;bottom:18px;z-index:30;background:#25d366;color:#fff;border:2px solid var(--ink);border-radius:99px;padding:14px 20px;font-weight:700;box-shadow:4px 4px 0 var(--ink);animation:bob 2.4s ease-in-out infinite}
+.fab{position:fixed;right:18px;bottom:18px;z-index:30;background:#25d366;color:#fff;border:2px solid var(--ink);border-radius:99px;padding:14px 20px;font-weight:700;box-shadow:4px 4px 0 var(--ink);animation:bob 2s ease-in-out infinite}
 .fab:hover{animation-play-state:paused;transform:scale(1.08)}
 @keyframes bob{50%{transform:translateY(-8px)}}
 .reveal{opacity:0;transform:translateY(30px);transition:.6s}
@@ -85,5 +86,5 @@ tr:hover td{background:#fffbe6}
 .toast.show{transform:translate(-50%,0)}
 .login{min-height:100vh;display:grid;place-items:center}
 .login .panel{width:min(400px,92%)}
-@media(max-width:640px){.badge{width:96px;height:96px;font-size:.8rem}.row{grid-template-columns:1fr}nav a:not(.btn){display:none}}
+@media(max-width:640px){.badge{width:96px;height:96px;font-size:.8rem}.row{grid-template-columns:1fr}nav a:not(.btn){display:none}.hero{padding-top:48px}.hero h1{font-size:clamp(2.8rem,13vw,5rem)}.blob{width:150px;height:150px;right:2%}.grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}.acts{min-width:max-content}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
