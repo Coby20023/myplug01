@@ -3,7 +3,7 @@ const CONFIG = {
   name: "MY PLUG 021",
   whatsapp: "265997921125", // 0997921125 in international format (Malawi +265)
   facebook: "https://www.facebook.com/search/top?q=leonard%20jnr", // replace with Leonard Jnr's profile link
-  supabaseUrl: "https://supabase.com/dashboard/project/ceimsxfjgwssgyraalww/settings/api-keys",       // e.g. https://abcdxyz.supabase.co
+  supabaseUrl: "https://ceimsxfjgwssgyraalww.supabase.co",       // e.g. https://abcdxyz.supabase.co
   supabaseKey: "sb_publishable_m3CvgynHQOK0fXFbvteTVw_KF3k5dPs"    // publishable (or anon) key: safe to be public
 };
 /* ======================== */
