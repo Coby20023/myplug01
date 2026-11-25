@@ -2,66 +2,113 @@
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MY PLUG 021</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 </head><body>
 <header><div class="wrap">
-  <a class="logo" href="#top">MY PLUG<b>021</b></a>
-  <nav><a href="#shop">Shop</a><a id="fbTop" href="#" target="_blank" rel="noopener">Facebook</a><a class="btn sm" id="waTop" href="#" target="_blank" rel="noopener">WhatsApp</a></nav>
+  <a class="logo" href="#home">MY PLUG<b>021</b></a>
+  <ul class="nav-menu">
+    <button id="menu-close" aria-label="Close menu"><i class="fas fa-times"></i></button>
+    <li><a href="#home">Home</a></li><li><a href="#shop">Shop</a></li><li><a href="#how">How to order</a></li><li><a href="#contact">Contact</a></li>
+  </ul>
+  <button id="menu-open" aria-label="Open menu"><i class="fas fa-bars"></i></button>
 </div></header>
 
-<main id="top">
-<div class="wrap hero">
-  <div class="badge"><div>Order<small>on WhatsApp</small></div></div>
-  <div class="blob"></div>
-  <h1><span>Your plug</span><span>for every</span><span>good thing.</span></h1>
-  <p id="tagline"></p>
-  <div class="btns"><a class="btn blue" href="#shop">Browse products</a><a class="btn ghost" id="waHero" href="#" target="_blank" rel="noopener">Chat with us</a></div>
-</div>
+<main>
+<section class="hero" id="home"><div class="wrap">
+  <div>
+    <h2 class="title">MY PLUG 021</h2>
+    <h3 class="subtitle">Your plug for every good thing.</h3>
+    <p class="desc" id="tagline"></p>
+    <div class="btns"><a class="btn" href="#shop">Shop now</a><a class="btn line" id="waHero" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a></div>
+  </div>
+  <div class="visual"><div class="disc" id="heroVisual">🛍️</div></div>
+</div></section>
+
 <div class="marquee"><div class="track" id="m1"></div></div>
 
-<section id="shop"><div class="wrap">
-  <h2>What's available</h2>
+<section class="shop" id="shop"><div class="wrap">
+  <h2 class="section-title">Our products</h2>
   <div class="chips" id="chips"></div>
   <div class="grid" id="grid"></div>
 </div></section>
-<div class="marquee alt"><div class="track" id="m2"></div></div>
+
+<div class="marquee dark"><div class="track" id="m2"></div></div>
+
+<section class="how" id="how"><div class="wrap">
+  <h2 class="section-title">How to order</h2>
+  <div class="steps">
+    <div class="step reveal"><i class="fas fa-bag-shopping"></i><h3>Pick your item</h3><p>Browse the products and tap Order on the one you want.</p></div>
+    <div class="step reveal"><i class="fa-brands fa-whatsapp"></i><h3>Message us</h3><p>WhatsApp opens with your order already typed. Just send it.</p></div>
+    <div class="step reveal"><i class="fas fa-handshake"></i><h3>Confirm with us</h3><p>We reply to agree on payment and delivery.</p></div>
+  </div>
+</div></section>
+
+<section class="contact" id="contact"><div class="wrap">
+  <div>
+    <h2 class="section-title" style="text-align:left;padding-bottom:20px">Contact us</h2>
+    <ul class="info">
+      <li><i class="fa-brands fa-whatsapp"></i><a id="waContact" href="#" target="_blank" rel="noopener"><span id="phoneText"></span></a></li>
+      <li><i class="fa-brands fa-facebook"></i><a id="fbContact" href="#" target="_blank" rel="noopener">Find us on Facebook</a></li>
+    </ul>
+  </div>
+  <form class="form" id="cform">
+    <input id="cn" placeholder="Your name" required>
+    <textarea id="cm" placeholder="What are you looking for?" required></textarea>
+    <button class="btn blue" type="submit">Send on WhatsApp</button>
+  </form>
+</div></section>
 </main>
 
 <footer><div class="wrap">
-  <div><div class="big">MY PLUG 021</div><p>Message us to order. We reply fast.</p></div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" id="waFoot" href="#" target="_blank" rel="noopener">WhatsApp 0997 921 125</a><a class="btn pink" id="fbFoot" href="#" target="_blank" rel="noopener">Facebook</a></div>
+  <p>© MY PLUG 021</p>
+  <div class="social"><a id="waFoot" href="#" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a><a id="fbFoot" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a></div>
 </div></footer>
-<a class="fab" id="fab" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">Chat on WhatsApp</a>
+<a class="fab" id="fab" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 <script>
 (async()=>{
-  const d = await fetchPublished(), s = d.settings, $ = id => document.getElementById(id);
-  ["waTop","waHero","waFoot","fab"].forEach(i => $(i).href = waLink(s.whatsapp, "Hi MY PLUG 021, I'd like to order."));
-  ["fbTop","fbFoot"].forEach(i => $(i).href = s.facebook);
-  $("tagline").textContent = s.tagline || "";
-  const items = (s.marquee.length ? s.marquee : ["MY PLUG 021"]);
-  const strip = items.map(t => `<span>${esc(t)}</span>`).join("");
-  $("m1").innerHTML = strip.repeat(6); $("m2").innerHTML = strip.repeat(6);
-  let cat = "All";
-  const cats = ["All", ...new Set(d.products.map(p => p.category).filter(Boolean))];
+  const $=id=>document.getElementById(id);
+  const body=document.body;
+  const toggle=()=>body.classList.toggle("menu");
+  $("menu-open").onclick=toggle; $("menu-close").onclick=toggle;
+  document.querySelectorAll(".nav-menu a").forEach(a=>a.addEventListener("click",()=>body.classList.remove("menu")));
+
+  const d=await fetchPublished(), s=d.settings;
+  const wa=t=>waLink(s.whatsapp,t||"Hi MY PLUG 021, I'd like to order.");
+  ["waHero","waContact","waFoot","fab"].forEach(i=>$(i).href=wa());
+  ["fbFoot","fbContact"].forEach(i=>$(i).href=s.facebook);
+  $("tagline").textContent=s.tagline||"";
+  $("phoneText").textContent="WhatsApp +"+s.whatsapp;
+  const hp=d.products.find(p=>p.image&&p.stock)||d.products.find(p=>p.image);
+  if(hp)$("heroVisual").innerHTML=`<img src="${esc(hp.image)}" alt="${esc(hp.name)}">`;
+
+  const items=s.marquee&&s.marquee.length?s.marquee:["MY PLUG 021"];
+  const strip=items.map(t=>`<span>${esc(t)}</span>`).join("");
+  $("m1").innerHTML=strip.repeat(6);$("m2").innerHTML=strip.repeat(6);
+
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
+  document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+  let cat="All";
+  const cats=["All",...new Set(d.products.map(p=>p.category).filter(Boolean))];
   function draw(){
-    $("chips").innerHTML = cats.map(c => `<button class="chip ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
-    const list = d.products.filter(p => cat==="All" || p.category===cat);
-    $("grid").innerHTML = d.error ? `<div class="empty">Products could not load. Please refresh or message us on WhatsApp.</div>` : list.length ? list.map(p => `
+    $("chips").innerHTML=cats.length>2?cats.map(c=>`<button class="chip ${c===cat?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join(""):"";
+    const list=d.products.filter(p=>cat==="All"||p.category===cat);
+    $("grid").innerHTML=d.error?`<div class="empty">Products could not load. Please refresh or message us on WhatsApp.</div>`:list.length?list.map(p=>`
       <article class="card reveal ${p.stock?"":"out"}">
-        <div class="img">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">`:"🛍️"}${p.tag?`<span class="tag">${esc(p.tag)}</span>`:""}${p.stock?"":`<span class="tag" style="background:#ddd">Sold out</span>`}</div>
+        <div class="img">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">`:"🛍️"}${p.tag?`<span class="tag">${esc(p.tag)}</span>`:""}${p.stock?"":`<span class="tag sold">Sold out</span>`}</div>
         <div class="body"><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p><div class="price">${money(p.price,s)}</div>
-        <a class="btn sm" target="_blank" rel="noopener" href="${waLink(s.whatsapp,`Hi MY PLUG 021, I want to order: ${p.name} (${money(p.price,s)})`)}">${p.stock?"Order on WhatsApp":"Sold out"}</a></div>
-      </article>`).join("") : `<div class="empty">No products here yet. Check back soon.</div>`;
-    const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)} }), {threshold:.1});
-    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+        <a class="btn sm" target="_blank" rel="noopener" href="${wa(`Hi MY PLUG 021, I want to order: ${p.name} (${money(p.price,s)})`)}">${p.stock?"Order on WhatsApp":"Sold out"}</a></div>
+      </article>`).join(""):`<div class="empty">No products here yet. Check back soon.</div>`;
+    document.querySelectorAll("#grid .reveal").forEach(el=>io.observe(el));
   }
-  $("chips").onclick = e => { if(e.target.dataset.c){cat=e.target.dataset.c;draw()} };
+  $("chips").onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;draw()}};
   draw();
+
+  $("cform").onsubmit=e=>{e.preventDefault();window.open(wa(`Hi MY PLUG 021, I'm ${$("cn").value.trim()}. ${$("cm").value.trim()}`),"_blank")};
 })();
 </script>
 </body></html>
