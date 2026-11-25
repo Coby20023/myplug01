@@ -95,9 +95,14 @@ $("saveS").onclick=async()=>{
 };
 function show(on){if(on&&!$("app").hidden)return;$("login").hidden=on;$("app").hidden=!on;if(on)load()}
 $("go").onclick=async()=>{
-  if(!sb){$("err").textContent="Supabase is not set up yet. Fill in app.js.";return}
-  const {error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
-  if(error)$("err").textContent=error.message;
+  const err=$("err");err.style.color="#c00";
+  if(!sb){err.textContent="Supabase is not set up. Check supabaseUrl and supabaseKey in app.js.";return}
+  err.style.color="#555";err.textContent="Logging in...";
+  try{
+    const {error}=await sb.auth.signInWithPassword({email:$("em").value.trim(),password:$("pw").value});
+    if(error){err.style.color="#c00";err.textContent=error.message;return}
+    err.textContent="";show(true);
+  }catch(e){err.style.color="#c00";err.textContent="Error: "+(e.message||e)}
 };
 $("pw").onkeydown=e=>{if(e.key==="Enter")$("go").click()};
 $("out").onclick=()=>sb.auth.signOut();
